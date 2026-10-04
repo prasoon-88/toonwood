@@ -1,0 +1,52 @@
+import { createServer as createHttpServer } from 'node:http'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import express from 'express'
+import { Server } from 'socket.io'
+import { createApi } from './api.js'
+import { attachRooms, MAX_IMAGE } from './rooms.js'
+import { safeEqual } from './util.js'
+
+const require = createRequire(import.meta.url)
+// Markdown rendering on the phone page: browser builds of marked and DOMPurify, served locally (no CDN).
+const VENDOR = {
+  'marked.js': join(dirname(require.resolve('marked')), 'marked.umd.js'),
+  'purify.js': join(dirname(require.resolve('dompurify')), 'purify.min.js')
+}
+const ROOM_PAGE = fileURLToPath(new URL('./public/room.html', import.meta.url))
+
+/**
+ * Build the whole backend without listening, so tests can run it on a random port.
+ * `config`: { appKey, publicUrl, webUrl, trustProxy, secureCookies, webDist }.
+ */
+export function createServer({ config, db = null, mailer = null, now = () => new Date() }) {
+  const app = express()
+  const http = createHttpServer(app)
+  // Room for one host picture per packet; guests are still limited by the room's text checks.
+  const io = new Server(http, { maxHttpBufferSize: MAX_IMAGE + 64 * 1024 })
+  const rooms = attachRooms(io, { appKey: config.appKey, publicUrl: config.publicUrl })
+
+  app.disable('x-powered-by')
+  // Behind a hosting proxy (Render, Railway, nginx) this makes req.ip the real client IP for rate limiting.
+  if (config.trustProxy) app.set('trust proxy', 1)
+
+  app.get('/health', (_req, res) => res.json({ ok: true, rooms: rooms.count() }))
+  app.use('/api', createApi({ appKey: config.appKey, safeEqual }))
+  app.get('/vendor/:file', (req, res) => {
+    const file = VENDOR[req.params.file]
+    if (!file) return res.sendStatus(404)
+    res.set('Cache-Control', 'public, max-age=86400').sendFile(file)
+  })
+  app.get('/r/:id', (req, res) => {
+    if (!rooms.has(req.params.id)) return res.status(404).send('This room does not exist or has been closed.')
+    res.sendFile(ROOM_PAGE)
+  })
+
+  async function close() {
+    rooms.stop()
+    await new Promise((resolve) => io.close(() => resolve()))
+  }
+
+  return { app, http, io, close }
+}
