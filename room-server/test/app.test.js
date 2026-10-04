@@ -34,3 +34,16 @@ test('the built website is served, with index.html for its routes', async () => 
     await server.close()
   }
 })
+
+test('responses carry security headers (no HSTS on plain http)', async () => {
+  const server = await startTestServer()
+  try {
+    const res = await fetch(`${server.url}/health`)
+    assert.equal(res.headers.get('x-frame-options'), 'DENY')
+    assert.equal(res.headers.get('referrer-policy'), 'no-referrer')
+    assert.equal(res.headers.get('x-content-type-options'), 'nosniff')
+    assert.equal(res.headers.get('strict-transport-security'), null)
+  } finally {
+    await server.close()
+  }
+})

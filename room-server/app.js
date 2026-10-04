@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import cookieParser from 'cookie-parser'
 import express from 'express'
+import helmet from 'helmet'
 import { Server } from 'socket.io'
 import { accountRouter } from './account/routes.js'
 import { createApi } from './api.js'
@@ -32,6 +33,15 @@ export function createServer({ config, db = null, mailer = null, now = () => new
   const rooms = attachRooms(io, { appKey: config.appKey, publicUrl: config.publicUrl })
 
   app.disable('x-powered-by')
+  // CSP is deferred: MUI/emotion inline styles and public/room.html's inline script would need nonces.
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      hsts: config.secureCookies ? undefined : false,
+      frameguard: { action: 'deny' },
+      referrerPolicy: { policy: 'no-referrer' }
+    })
+  )
   // Behind a hosting proxy (Render, Railway, nginx) this makes req.ip the real client IP for rate limiting.
   if (config.trustProxy) app.set('trust proxy', 1)
 

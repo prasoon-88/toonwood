@@ -86,6 +86,17 @@ test('wrong passwords are refused and then rate limited', async () => {
   assert.equal((await c.post('/api/auth/login', { email, password: PASSWORD })).status, 429)
 })
 
+test('resetting the password clears the login lockout', async () => {
+  const { email } = await signUpAndVerify()
+  const c = await browser()
+  for (let i = 0; i < 5; i++) assert.equal((await c.post('/api/auth/login', { email, password: 'wrong password!!' })).status, 401)
+  assert.equal((await c.post('/api/auth/login', { email, password: PASSWORD })).status, 429)
+  assert.equal((await c.post('/api/auth/forgot', { email })).status, 200)
+  const token = linkFor(email, 'reset')
+  assert.equal((await c.post('/api/auth/reset', { token, password: 'a brand new passphrase' })).status, 200)
+  assert.equal((await c.post('/api/auth/login', { email, password: 'a brand new passphrase' })).status, 200)
+})
+
 test('logout ends the website session', async () => {
   const { email } = await signUpAndVerify()
   const c = await browser()

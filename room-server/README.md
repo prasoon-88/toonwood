@@ -40,12 +40,21 @@ Deploy this folder to any Node 20+ host (Render, Railway, Fly.io, a VPS) and set
 
 | Env var | Purpose |
 |---|---|
-| `PUBLIC_URL` | Public https address, e.g. `https://api.callcopilot.app` (used in QR codes) |
+| `NODE_ENV` | Set to `production` |
+| `PUBLIC_URL` | Public https address, e.g. `https://toonwide.app` (QR codes, cookies); required in production |
+| `DATABASE_URL` | Postgres connection string; required in production |
+| `WEB_URL` | Website address used in email links; defaults to `PUBLIC_URL` |
+| `MAIL_DRIVER` | `resend` in production (the default there) |
+| `RESEND_API_KEY` | Resend API key for sending email; required in production |
+| `MAIL_FROM` | Sender, e.g. `Toonwide <no-reply@toonwide.app>` |
 | `APP_KEY` | Shared key built into the app (`MAIN_VITE_APP_KEY`); only the app can use the API and host rooms |
 | `DEEPGRAM_API_KEY` | Deepgram key with **Member** role or higher (needed to mint temporary tokens) |
 | `TYPESAFE_API_KEY` | Optional; without it the app falls back to offline preset matching |
-| `TRUST_PROXY` | Set to `1` behind a hosting proxy so rate limits use the real client IP |
+| `TRUST_PROXY` | Set to `1` (or `true`) behind a hosting proxy so rate limits use the real client IP |
 | `PORT` | Usually set by the host |
+
+In production (`NODE_ENV=production` or an https `PUBLIC_URL`) the server refuses to start unless `DATABASE_URL`,
+an https `PUBLIC_URL`, `MAIL_DRIVER=resend` and `RESEND_API_KEY` are all set.
 
 ## API
 

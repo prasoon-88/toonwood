@@ -30,8 +30,12 @@ export function Dashboard() {
   }
 
   async function logout() {
-    await api('/auth/logout', {})
-    navigate('/login')
+    try {
+      await api('/auth/logout', {})
+      navigate('/login')
+    } catch (err) {
+      setNotice((err as Error).message)
+    }
   }
 
   if (!account) return <Card title="Dashboard"><Typography color="text.secondary">{notice || 'Loading…'}</Typography></Card>

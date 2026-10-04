@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link as RouterLink, useSearchParams } from 'react-router'
 import { Alert, Button, Link, Typography } from '@mui/material'
 import { api } from '../api'
@@ -6,23 +6,31 @@ import { Card } from '../components/Card'
 
 export function Verify() {
   const [params] = useSearchParams()
-  const [state, setState] = useState<'working' | 'ok' | 'error'>('working')
+  const [state, setState] = useState<'ready' | 'sending' | 'ok' | 'error'>('ready')
   const [error, setError] = useState('')
-  // Links are single-use: make sure a double render never sends the token twice.
+  // Links are single-use: never send the token twice. It is sent only on a click, so mail link scanners that merely open the page can't verify the account.
   const sent = useRef(false)
 
-  useEffect(() => {
+  function confirm() {
     if (sent.current) return
     sent.current = true
+    setState('sending')
     api('/auth/verify', { token: params.get('token') ?? '' })
       .then(() => setState('ok'))
       .catch((err: Error) => {
         setError(err.message)
         setState('error')
       })
-  }, [params])
+  }
 
-  if (state === 'working') return <Card title="Verifying…"><Typography color="text.secondary">One moment.</Typography></Card>
+  if (state === 'ready' || state === 'sending') {
+    return (
+      <Card title="Confirm your email">
+        <Typography sx={{ mb: 2 }}>Click the button to verify your email address.</Typography>
+        <Button fullWidth variant="contained" onClick={confirm} disabled={state === 'sending'}>Confirm my email</Button>
+      </Card>
+    )
+  }
   if (state === 'error') {
     return (
       <Card title="Link not valid">

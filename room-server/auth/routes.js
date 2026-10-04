@@ -166,6 +166,9 @@ export function authRouter({ db, mailer, config, now }) {
     if (!userId) return res.status(400).json({ error: 'This link is invalid or has expired. Request a new one.' })
     await db.update(users).set({ passwordHash: await hashPassword(body.data.password) }).where(eq(users.id, userId))
     await deleteUserWebSessions(db, userId)
+    // The lockout message tells people to reset: a successful reset must lift it.
+    const [owner] = await db.select().from(users).where(eq(users.id, userId))
+    if (owner) emailFailures.reset(owner.email)
     res.json({ ok: true })
   })
 

@@ -2,6 +2,7 @@ import './env.js'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { createServer } from './app.js'
+import { productionProblems, trustProxyOn } from './config.js'
 import { createDb } from './db/index.js'
 import { createMailer } from './mail/index.js'
 
@@ -16,21 +17,24 @@ function lanIp() {
 /** Base URL that phones use; on a hosted server set PUBLIC_URL to its https address. */
 const publicUrl = (process.env.PUBLIC_URL ?? `http://${lanIp()}:${PORT}`).replace(/\/$/, '')
 
+const production = process.env.NODE_ENV === 'production' || publicUrl.startsWith('https://')
+const problems = productionProblems(process.env, publicUrl)
+if (problems.length) throw new Error(`Refusing to start in production:\n - ${problems.join('\n - ')}`)
+
 const config = {
   appKey: process.env.APP_KEY ?? '',
   publicUrl,
   webUrl: (process.env.WEB_URL ?? publicUrl).replace(/\/$/, ''),
-  trustProxy: Boolean(process.env.TRUST_PROXY),
+  trustProxy: trustProxyOn(process.env.TRUST_PROXY),
   secureCookies: publicUrl.startsWith('https://'),
   webDist: process.env.WEB_DIST ?? fileURLToPath(new URL('../web/dist', import.meta.url))
 }
 
 // Local dev without Postgres: PGlite stored in .data/. Production must set DATABASE_URL.
 const LOCAL_DB = `pglite:${fileURLToPath(new URL('./.data/pglite', import.meta.url))}`
-if (!process.env.DATABASE_URL && process.env.NODE_ENV === 'production') throw new Error('DATABASE_URL is required')
 const db = await createDb(process.env.DATABASE_URL ?? LOCAL_DB)
 
-const mailDriver = process.env.MAIL_DRIVER ?? (process.env.NODE_ENV === 'production' ? 'resend' : 'console')
+const mailDriver = process.env.MAIL_DRIVER ?? (production ? 'resend' : 'console')
 const mailer = createMailer({
   driver: mailDriver,
   apiKey: process.env.RESEND_API_KEY ?? '',

@@ -26,6 +26,7 @@ test('sign up, verify, log in and see 60 free minutes', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible()
 
   await page.goto(await lastLinkTo(email))
+  await page.getByRole('button', { name: 'Confirm my email' }).click()
   await expect(page.getByRole('heading', { name: 'Email verified' })).toBeVisible()
 
   await page.goto('/login')
