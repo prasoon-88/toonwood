@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { createServer as createHttpServer } from 'node:http'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
@@ -49,6 +50,13 @@ export function createServer({ config, db = null, mailer = null, now = () => new
     if (!rooms.has(req.params.id)) return res.status(404).send('This room does not exist or has been closed.')
     res.sendFile(ROOM_PAGE)
   })
+
+  // The website (web/ build). Only its own routes fall back to index.html, so /api, /r and /socket.io are untouched.
+  const SITE_ROUTES = ['/', '/signup', '/login', '/verify', '/forgot', '/reset', '/dashboard']
+  if (config.webDist && existsSync(join(config.webDist, 'index.html'))) {
+    app.use(express.static(config.webDist, { index: false, maxAge: '1h' }))
+    app.get(SITE_ROUTES, (_req, res) => res.sendFile(join(config.webDist, 'index.html')))
+  }
 
   async function close() {
     rooms.stop()

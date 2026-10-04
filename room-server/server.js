@@ -22,7 +22,7 @@ const config = {
   webUrl: (process.env.WEB_URL ?? publicUrl).replace(/\/$/, ''),
   trustProxy: Boolean(process.env.TRUST_PROXY),
   secureCookies: publicUrl.startsWith('https://'),
-  webDist: null
+  webDist: process.env.WEB_DIST ?? fileURLToPath(new URL('../web/dist', import.meta.url))
 }
 
 // Local dev without Postgres: PGlite stored in .data/. Production must set DATABASE_URL.
