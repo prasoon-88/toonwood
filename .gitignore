@@ -1,0 +1,12 @@
+node_modules
+out
+dist
+*.log
+.env
+.env.*
+!.env.example
+.data/
+test-results/
+playwright-report/
+web/e2e/.outbox.jsonl
+.superpowers/

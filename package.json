@@ -1,0 +1,52 @@
+{
+  "name": "call-copilot",
+  "version": "0.1.0",
+  "description": "Real-time call assistant: live transcript + preset (Jev) and AI answers with your own API keys",
+  "main": "out/main/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "dist": "electron-vite build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.callcopilot.app",
+    "productName": "Call Copilot",
+    "files": [
+      "out/**"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.png"
+    }
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.127",
+    "@ai-sdk/deepseek": "^2.0.71",
+    "@ai-sdk/google": "^3.0.130",
+    "@ai-sdk/groq": "^3.0.72",
+    "@ai-sdk/openai": "^3.0.124",
+    "ai": "^6.0.300",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "socket.io-client": "^4.8.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^41.7.1",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
+  }
+}

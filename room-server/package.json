@@ -1,0 +1,25 @@
+{
+  "name": "call-copilot-room-server",
+  "version": "0.1.0",
+  "description": "Express + Socket.IO room server for Call Copilot: guests join by QR and chat with the desktop host",
+  "type": "module",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test/smoke.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.16",
+    "express": "^5.2.1",
+    "marked": "^18.0.14",
+    "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
+  }
+}

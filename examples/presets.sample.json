@@ -1,0 +1,33 @@
+{
+  "name": "Sample interview practice",
+  "items": [
+    {
+      "id": "intro",
+      "question": "Tell me about yourself",
+      "variants": ["Introduce yourself", "Walk me through your background", "Who are you"],
+      "answer": "I'm a frontend engineer with 4 years of experience building React apps.\n- Led the redesign of our checkout, +12% conversion\n- Comfortable across TypeScript, Node and testing\n- Looking for a team where I can own product features end to end",
+      "tags": ["intro"]
+    },
+    {
+      "id": "why-company",
+      "question": "Why do you want to work here?",
+      "variants": ["What interests you about this role", "Why this company"],
+      "answer": "Your product solves a problem I've felt myself, and the role matches what I do best: shipping user-facing features quickly with high quality.",
+      "tags": ["motivation"]
+    },
+    {
+      "id": "weakness",
+      "question": "What is your biggest weakness?",
+      "variants": ["Something you are working to improve", "Area of improvement"],
+      "answer": "I used to take on too much myself. I now break work into smaller tasks and delegate earlier, which made our sprints more predictable.",
+      "tags": ["behavioral"]
+    },
+    {
+      "id": "conflict",
+      "question": "Tell me about a time you had a conflict with a teammate",
+      "variants": ["Describe a disagreement at work", "How do you handle conflict"],
+      "answer": "Situation: a backend dev and I disagreed on API shape.\nTask: unblock the release.\nAction: we wrote both options down with trade-offs and asked the consumer team.\nResult: shipped on time, and we kept that RFC habit.",
+      "tags": ["behavioral", "star"]
+    }
+  ]
+}
