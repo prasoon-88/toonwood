@@ -1,5 +1,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { mkdtemp } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { createDb, seed } from '../db/index.js'
 import { plans, users } from '../db/schema.js'
 
@@ -17,6 +20,13 @@ test('seeding twice keeps a single free plan', async () => {
   const db = await createDb('memory')
   await seed(db)
   assert.equal((await db.select().from(plans)).length, 1)
+})
+
+test('an on-disk PGlite database is created even when its parent folders do not exist', async () => {
+  const dir = join(await mkdtemp(join(tmpdir(), 'tw-db-')), 'not', 'yet', 'there')
+  const db = await createDb(`pglite:${dir}`)
+  assert.equal((await db.select().from(plans)).length, 1)
+  await db.$client.close()
 })
 
 test('emails are unique', async () => {

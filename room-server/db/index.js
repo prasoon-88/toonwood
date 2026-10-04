@@ -1,3 +1,4 @@
+import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import * as schema from './schema.js'
 
@@ -28,7 +29,10 @@ export async function createDb(databaseUrl) {
     const { PGlite } = await import('@electric-sql/pglite')
     const { drizzle } = await import('drizzle-orm/pglite')
     const { migrate } = await import('drizzle-orm/pglite/migrator')
-    db = drizzle(new PGlite(databaseUrl === 'memory' ? undefined : databaseUrl.slice('pglite:'.length)), { schema })
+    const dataDir = databaseUrl === 'memory' ? undefined : databaseUrl.slice('pglite:'.length)
+    // PGlite creates only the last folder of its path; make sure the parents exist (e.g. a fresh .data/).
+    if (dataDir) mkdirSync(dataDir, { recursive: true })
+    db = drizzle(new PGlite(dataDir), { schema })
     await migrate(db, { migrationsFolder })
   } else {
     const { default: pg } = await import('pg')
