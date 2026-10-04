@@ -1,7 +1,7 @@
 {
-  "name": "call-copilot-room-server",
+  "name": "toonwide-server",
   "version": "0.1.0",
-  "description": "Express + Socket.IO room server for Call Copilot: guests join by QR and chat with the desktop host",
+  "description": "Toonwide backend: accounts, minute packs, website, app API and rooms",
   "type": "module",
   "main": "server.js",
   "private": true,

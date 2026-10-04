@@ -1,8 +1,10 @@
-# Call Copilot Backend
+# Toonwide server
 
-Express + Socket.IO server behind the desktop app. It holds the product's service keys so app users only need
-their own AI key.
+Express + Socket.IO backend for Toonwide. It holds the product's service keys, the database (users, minute packs,
+sessions) and serves the website from `../web/dist`.
 
+- **Website + accounts**: sign up, email verification (grants the free 60-minute pack), login, password reset,
+  dashboard (`/api/auth/*`, `/api/account`)
 - **`/api/stt/token`**: short-lived Deepgram token for live transcription
 - **`/api/classify`**: question detection + preset matching with TypeSafe Jev
 - **Rooms**: the app hosts a room, guests scan a QR and chat from `/r/<roomId>` (Markdown, sanitized)
@@ -16,6 +18,21 @@ npm start
 ```
 
 Phones on the same Wi-Fi can join rooms. Windows may ask to allow Node.js through the firewall: allow **Private** networks.
+
+## Database
+
+Postgres via Drizzle ORM. Without `DATABASE_URL` the server uses PGlite stored in `.data/` (no install needed);
+tests use an in-memory PGlite. Migrations in `db/migrations/` run automatically on start.
+
+After changing `db/schema.js`: `npm run db:generate -- --name <change>` and commit the new migration.
+
+To give someone a pack by hand (until payments exist), insert into `grants` or call `grantPack()` from
+`billing/grants.js`.
+
+## Website
+
+`cd ../web && npm install && npm run build`, then the server serves it at `/`. For live editing run
+`npm run dev` in `web/` (port 5174) with `WEB_URL=http://localhost:5174` in this server's `.env`.
 
 ## Deploy
 
