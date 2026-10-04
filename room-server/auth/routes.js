@@ -1,7 +1,7 @@
 import express from 'express'
-import { eq } from 'drizzle-orm'
+import { and, eq, isNull } from 'drizzle-orm'
 import { z } from 'zod'
-import { users } from '../db/schema.js'
+import { emailTokens, users } from '../db/schema.js'
 import { grantFreePack } from '../billing/grants.js'
 import { existingAccountMessage, resetEmailMessage, verifyEmailMessage } from '../mail/templates.js'
 import { consumeEmailToken, createEmailToken } from './emailTokens.js'
@@ -70,6 +70,12 @@ export function authRouter({ db, mailer, config, now }) {
     if (existing?.emailVerifiedAt) {
       await mailer.send({ to: email, ...existingAccountMessage(`${config.webUrl}/login`) })
     } else if (existing) {
+      // Whoever claims an unverified address last owns it: drop any earlier password, link and session.
+      await db.transaction(async (tx) => {
+        await tx.update(users).set({ passwordHash: await hashPassword(password) }).where(eq(users.id, existing.id))
+        await tx.delete(emailTokens).where(and(eq(emailTokens.userId, existing.id), eq(emailTokens.purpose, 'verify'), isNull(emailTokens.usedAt)))
+        await deleteUserWebSessions(tx, existing.id)
+      })
       await sendVerification(existing)
     } else {
       const [user] = await db
@@ -88,7 +94,11 @@ export function authRouter({ db, mailer, config, now }) {
     if (!userId) return res.status(400).json({ error: 'This link is invalid or has expired. Request a new one.' })
     await db.transaction(async (tx) => {
       const [user] = await tx.select().from(users).where(eq(users.id, userId))
-      if (!user.emailVerifiedAt) await tx.update(users).set({ emailVerifiedAt: now() }).where(eq(users.id, userId))
+      if (!user.emailVerifiedAt) {
+        await tx.update(users).set({ emailVerifiedAt: now() }).where(eq(users.id, userId))
+        // End sessions opened before the email was proven.
+        await deleteUserWebSessions(tx, userId)
+      }
       await grantFreePack(tx, userId, now())
     })
     res.json({ ok: true })
@@ -109,13 +119,15 @@ export function authRouter({ db, mailer, config, now }) {
       return res.status(429).json({ error: 'Too many attempts. Try again in 15 minutes or reset your password.' })
     }
 
+    // Count the attempt before the slow hash check so parallel guesses can't all slip past the limit.
+    emailFailures.fail(email)
+    ipFailures.fail(req.ip)
+
     const [user] = await db.select().from(users).where(eq(users.email, email))
     // Verify against a dummy hash for unknown emails so response time doesn't reveal which emails exist.
     dummyHash ??= await hashPassword(newToken())
     const ok = (await verifyPassword(user?.passwordHash ?? dummyHash, password)) && user && !user.deletedAt
     if (!ok) {
-      emailFailures.fail(email)
-      ipFailures.fail(req.ip)
       return res.status(401).json({ error: 'Wrong email or password' })
     }
 

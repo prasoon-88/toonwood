@@ -46,6 +46,7 @@ test('sign up, verify, log in and see the free minutes', async () => {
   assert.equal((await c.get('/api/account')).data.minutesLeft, 0)
 
   assert.equal((await c.post('/api/auth/verify', { token: linkFor(email, 'verify') })).status, 200)
+  assert.equal((await c.post('/api/auth/login', { email, password: PASSWORD })).status, 200)
   const account = (await c.get('/api/account')).data
   assert.equal(account.user.emailVerified, true)
   assert.equal(account.minutesLeft, 60)
@@ -127,4 +128,43 @@ test('resend verification sends a new link to logged-in unverified users', async
   const first = linkFor(email, 'verify')
   assert.equal((await c.post('/api/auth/resend-verification')).status, 200)
   assert.notEqual(linkFor(email, 'verify'), first)
+})
+
+test('parallel wrong-password logins are counted before they are checked', async () => {
+  const { email } = await signUpAndVerify()
+  const c = await browser()
+  const results = await Promise.all(
+    Array.from({ length: 10 }, () => c.post('/api/auth/login', { email, password: 'wrong password!!' }))
+  )
+  const statuses = results.map((r) => r.status)
+  assert.ok(statuses.filter((s) => s === 401).length <= 5, statuses.join())
+  assert.equal(statuses.filter((s) => s === 429).length, 10 - statuses.filter((s) => s === 401).length)
+})
+
+test('a second sign-up for an unverified email replaces the password and ends earlier sessions', async () => {
+  const email = freshEmail()
+  const P2 = 'a different passphrase'
+  const first = await browser()
+  await first.post('/api/auth/signup', { email, password: PASSWORD })
+  const oldToken = linkFor(email, 'verify')
+  assert.equal((await first.post('/api/auth/login', { email, password: PASSWORD })).status, 200)
+
+  const second = await browser()
+  assert.equal((await second.post('/api/auth/signup', { email, password: P2 })).status, 201)
+  assert.equal((await first.get('/api/auth/me')).status, 401)
+  assert.equal((await second.post('/api/auth/verify', { token: oldToken })).status, 400)
+  assert.equal((await second.post('/api/auth/verify', { token: linkFor(email, 'verify') })).status, 200)
+  assert.equal((await second.post('/api/auth/login', { email, password: PASSWORD })).status, 401)
+  assert.equal((await second.post('/api/auth/login', { email, password: P2 })).status, 200)
+})
+
+test('verifying ends sessions opened before verification', async () => {
+  const email = freshEmail()
+  const a = await browser()
+  await a.post('/api/auth/signup', { email, password: PASSWORD })
+  await a.post('/api/auth/login', { email, password: PASSWORD })
+  assert.equal((await a.get('/api/auth/me')).status, 200)
+  const b = await browser()
+  assert.equal((await b.post('/api/auth/verify', { token: linkFor(email, 'verify') })).status, 200)
+  assert.equal((await a.get('/api/auth/me')).status, 401)
 })
