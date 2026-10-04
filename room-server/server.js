@@ -1,6 +1,8 @@
 import './env.js'
 import { networkInterfaces } from 'node:os'
+import { fileURLToPath } from 'node:url'
 import { createServer } from './app.js'
+import { createDb } from './db/index.js'
 
 const PORT = Number(process.env.PORT ?? 3030)
 
@@ -22,7 +24,12 @@ const config = {
   webDist: null
 }
 
-const { http } = createServer({ config })
+// Local dev without Postgres: PGlite stored in .data/. Production must set DATABASE_URL.
+const LOCAL_DB = `pglite:${fileURLToPath(new URL('./.data/pglite', import.meta.url))}`
+if (!process.env.DATABASE_URL && process.env.NODE_ENV === 'production') throw new Error('DATABASE_URL is required')
+const db = await createDb(process.env.DATABASE_URL ?? LOCAL_DB)
+
+const { http } = createServer({ config, db })
 
 http.listen(PORT, () => {
   console.log(`Toonwide server listening on :${PORT}`)

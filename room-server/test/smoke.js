@@ -38,6 +38,7 @@ const server = spawn(process.execPath, ['server.js'], {
   env: {
     ...process.env,
     PORT: String(PORT),
+    DATABASE_URL: 'memory',
     APP_KEY,
     PUBLIC_URL: URL,
     DEEPGRAM_API_KEY: 'dg-secret',

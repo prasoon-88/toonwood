@@ -8,18 +8,23 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "db:generate": "drizzle-kit generate"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "dompurify": "^3.4.16",
+    "drizzle-orm": "^0.45.3",
     "express": "^5.2.1",
     "marked": "^18.0.14",
+    "pg": "^8.23.1",
     "socket.io": "^4.8.4"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.31.11",
     "socket.io-client": "^4.8.4"
   }
 }
