@@ -1,5 +1,6 @@
 import { createServer } from '../app.js'
 import { createDb } from '../db/index.js'
+import { createMailer } from '../mail/index.js'
 
 const TEST_CONFIG = {
   appKey: '',
@@ -13,10 +14,11 @@ const TEST_CONFIG = {
 /** Start the backend in-process on a free port. Later tasks add `db` and `mailer` here. */
 export async function startTestServer({ config = {} } = {}) {
   const db = await createDb('memory')
-  const server = createServer({ config: { ...TEST_CONFIG, ...config }, db })
+  const mailer = createMailer({ driver: 'memory' })
+  const server = createServer({ config: { ...TEST_CONFIG, ...config }, db, mailer })
   await new Promise((resolve) => server.http.listen(0, resolve))
   const url = `http://localhost:${server.http.address().port}`
-  return { url, db, close: server.close }
+  return { url, db, mailer, close: server.close }
 }
 
 /** Minimal browser stand-in: keeps cookies and sends the CSRF header like the website does. */

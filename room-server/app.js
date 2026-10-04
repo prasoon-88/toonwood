@@ -2,9 +2,12 @@ import { createServer as createHttpServer } from 'node:http'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import cookieParser from 'cookie-parser'
 import express from 'express'
 import { Server } from 'socket.io'
+import { accountRouter } from './account/routes.js'
 import { createApi } from './api.js'
+import { authRouter } from './auth/routes.js'
 import { attachRooms, MAX_IMAGE } from './rooms.js'
 import { safeEqual } from './util.js'
 
@@ -32,6 +35,10 @@ export function createServer({ config, db = null, mailer = null, now = () => new
   if (config.trustProxy) app.set('trust proxy', 1)
 
   app.get('/health', (_req, res) => res.json({ ok: true, rooms: rooms.count() }))
+  app.use(cookieParser())
+  // Website routes first: the app API below rejects anything without a device id.
+  app.use('/api/auth', authRouter({ db, mailer, config, now }))
+  app.use('/api/account', accountRouter({ db, now }))
   app.use('/api', createApi({ appKey: config.appKey, safeEqual }))
   app.get('/vendor/:file', (req, res) => {
     const file = VENDOR[req.params.file]

@@ -3,6 +3,7 @@ import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { createServer } from './app.js'
 import { createDb } from './db/index.js'
+import { createMailer } from './mail/index.js'
 
 const PORT = Number(process.env.PORT ?? 3030)
 
@@ -29,7 +30,15 @@ const LOCAL_DB = `pglite:${fileURLToPath(new URL('./.data/pglite', import.meta.u
 if (!process.env.DATABASE_URL && process.env.NODE_ENV === 'production') throw new Error('DATABASE_URL is required')
 const db = await createDb(process.env.DATABASE_URL ?? LOCAL_DB)
 
-const { http } = createServer({ config, db })
+const mailDriver = process.env.MAIL_DRIVER ?? (process.env.NODE_ENV === 'production' ? 'resend' : 'console')
+const mailer = createMailer({
+  driver: mailDriver,
+  apiKey: process.env.RESEND_API_KEY ?? '',
+  from: process.env.MAIL_FROM,
+  outboxFile: process.env.MAIL_OUTBOX ?? ''
+})
+
+const { http } = createServer({ config, db, mailer })
 
 http.listen(PORT, () => {
   console.log(`Toonwide server listening on :${PORT}`)
