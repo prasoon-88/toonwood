@@ -17,7 +17,7 @@ const transcript = [
 
 function Transcript() {
   return (
-    <SoftPanel sx={{ height: '100%', display: 'flex', alignItems: 'center', p: { xs: 2, md: 4 } }}>
+    <SoftPanel sx={{ p: { xs: 2, md: 4 } }}>
       <Box
         aria-hidden="true"
         sx={{
@@ -73,12 +73,12 @@ export function Stats() {
   return (
     <Box component="section" aria-label="Toonwide in numbers">
       <Box className="container" sx={{ py: { xs: 10, md: 16 }, pt: { xs: 0, md: 0 } }}>
-        <div className="row g-4 gx-lg-5 align-items-stretch">
+        <div className="row g-4 gx-lg-5 align-items-center">
           <div className="col-lg-5">
             <Transcript />
           </div>
           <div className="col-lg-7">
-            <Box component="dl" sx={{ m: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Box component="dl" sx={{ m: 0 }}>
               {stats.map((s, i) => (
                 <Box
                   key={s.value}

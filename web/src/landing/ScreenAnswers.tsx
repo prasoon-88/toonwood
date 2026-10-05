@@ -84,11 +84,8 @@ function ProblemCard() {
         }}
       >
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <Box component="span" sx={{ px: 1.25, py: 0.25, borderRadius: `${tokens.radius.chip}px`, background: '#e3f6ea', color: '#17803d', fontSize: 12, fontWeight: 600 }}>
-            Easy
-          </Box>
           <Box component="span" sx={{ px: 1.25, py: 0.25, borderRadius: `${tokens.radius.chip}px`, background: '#e9eefc', color: tokens.primary, fontSize: 12, fontWeight: 600 }}>
-            Arrays
+            On screen
           </Box>
         </Box>
         <Box sx={{ fontSize: { xs: 19, md: 21 }, fontWeight: 600, lineHeight: 1.3, color: tokens.ink, letterSpacing: '-0.3px' }}>
