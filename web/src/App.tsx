@@ -1,4 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import { LandingPage } from './landing/LandingPage'
 import { Dashboard } from './pages/Dashboard'
 import { Forgot } from './pages/Forgot'
 import { Login } from './pages/Login'
@@ -10,7 +11,7 @@ export function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify" element={<Verify />} />
