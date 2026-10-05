@@ -108,6 +108,9 @@ export function Hero() {
       <Box className="container" sx={{ position: 'relative', zIndex: 2, mt: { xs: 7, md: 8 } }}>
         <ProductShot />
       </Box>
+
+      {/* sentinel for FloatingCta: once this scrolls above the viewport the hero is out of view */}
+      <Box id="hero-end" aria-hidden="true" sx={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '1px', pointerEvents: 'none' }} />
     </Box>
   )
 }
