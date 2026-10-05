@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography, useMediaQuery } from '@mui/material'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import { SectionHeading } from './SectionHeading'
 import { tokens } from './tokens'
@@ -31,6 +31,7 @@ const faqs = [
 ]
 
 export function Faq() {
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   return (
     <Box component="section" id="faq" aria-labelledby="faq-title" sx={{ scrollMarginTop: '24px' }}>
       <Box className="container" sx={{ py: { xs: 10, md: 16 }, pt: { xs: 0, md: 0 } }}>
@@ -39,16 +40,17 @@ export function Faq() {
             <SectionHeading titleId="faq-title" title="Frequently asked questions" align="left" />
           </div>
           <div className="col-lg-8">
-            <Box sx={{ borderTop: '1px solid #e6e8ee' }}>
+            <Box sx={{ borderTop: `1px solid ${tokens.divider}` }}>
               {faqs.map((f, i) => (
                 <Accordion
                   key={f.q}
                   disableGutters
                   elevation={0}
                   square
+                  slotProps={reducedMotion ? { transition: { timeout: 0 } } : undefined}
                   sx={{
                     background: 'transparent',
-                    borderBottom: '1px solid #e6e8ee',
+                    borderBottom: `1px solid ${tokens.divider}`,
                     '&::before': { display: 'none' }
                   }}
                 >
@@ -60,7 +62,12 @@ export function Faq() {
                       px: 0,
                       py: { xs: 1.5, md: 2 },
                       '& .MuiAccordionSummary-content': { my: 0, pr: 2 },
-                      '&.Mui-focusVisible': { background: 'rgba(31,99,230,.06)', borderRadius: '8px' }
+                      '&.Mui-focusVisible': {
+                        background: 'rgba(31,99,230,.06)',
+                        borderRadius: '8px',
+                        outline: `2px solid ${tokens.primary}`,
+                        outlineOffset: 2
+                      }
                     }}
                   >
                     <Typography component="span" sx={{ fontSize: { xs: 19, md: 22 }, fontWeight: 500, letterSpacing: '-0.3px', color: tokens.ink }}>

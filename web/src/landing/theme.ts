@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material'
 import '@fontsource/instrument-serif/400.css'
-import '@fontsource/instrument-serif/400-italic.css'
 import '@fontsource-variable/inter'
 import { fonts, tokens } from './tokens'
 
@@ -12,6 +11,8 @@ export const landingTheme = createTheme({
     text: { primary: tokens.ink, secondary: tokens.muted },
     background: { default: '#ffffff' }
   },
+  // match the Bootstrap grid the sections are laid out with
+  breakpoints: { values: { xs: 0, sm: 576, md: 768, lg: 992, xl: 1200 } },
   shape: { borderRadius: tokens.radius.button },
   typography: {
     fontFamily: fonts.sans,

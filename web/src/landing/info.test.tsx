@@ -1,5 +1,5 @@
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { LandingPage } from './LandingPage'
 
@@ -34,4 +34,16 @@ test('FAQ answers expand on click', () => {
   fireEvent.click(question)
   expect(question.getAttribute('aria-expanded')).toBe('true')
   expect(screen.getByText(/Every new account gets 60 free minutes, valid for 7 days\. Larger minute packs/)).toBeTruthy()
+})
+
+test('stats have their own h2 so the stat titles do not nest under the features heading', () => {
+  renderPage()
+  const h2 = screen.getByRole('heading', { level: 2, name: 'Toonwide in numbers' })
+  const section = h2.closest('section')!
+  expect(section.getAttribute('aria-labelledby')).toBe(h2.id)
+  expect(within(section).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+    'Free to start',
+    'Nothing joins your meeting',
+    'Answers from your screen'
+  ])
 })

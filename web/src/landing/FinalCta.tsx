@@ -9,7 +9,8 @@ const float = keyframes`
 
 const floating = {
   position: 'absolute',
-  display: { xs: 'none', md: 'block' },
+  // only where the headline column leaves room beside it (container ≥ 1140 px)
+  display: { xs: 'none', xl: 'block' },
   animation: `${float} 6s ease-in-out infinite`,
   '@media (prefers-reduced-motion: reduce)': { animation: 'none' }
 } as const
@@ -37,12 +38,12 @@ export function FinalCta() {
           </Box>
         </Box>
 
-        <Box aria-hidden="true" sx={{ ...floating, right: { md: '22%', lg: '24%' }, top: { md: 90, lg: 100 } }}>
+        <Box aria-hidden="true" sx={{ ...floating, right: '24%', top: 100 }}>
           <KeyCap variant="float">Ctrl</KeyCap>
         </Box>
         <Box
           aria-hidden="true"
-          sx={{ ...floating, right: { md: 24, lg: 40 }, top: { md: 190, lg: 210 }, animationDelay: '-3s', '& > span': { transform: 'rotate(10deg)' } }}
+          sx={{ ...floating, right: 40, top: 210, animationDelay: '-3s', '& > span': { transform: 'rotate(10deg)' } }}
         >
           <KeyCap variant="float">S</KeyCap>
         </Box>

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Box } from '@mui/material'
-import { fonts } from './tokens'
+import { fonts, tokens } from './tokens'
 
 export function KeyCap({ children, variant = 'flat' }: { children: ReactNode; variant?: 'flat' | 'float' }) {
   if (variant === 'float') {
@@ -21,7 +21,7 @@ export function KeyCap({ children, variant = 'flat' }: { children: ReactNode; va
           fontFamily: fonts.sans,
           fontWeight: 600,
           fontSize: { xs: 22, md: 28 },
-          color: '#0f1115'
+          color: tokens.ink
         }}
       >
         {children}
@@ -45,7 +45,7 @@ export function KeyCap({ children, variant = 'flat' }: { children: ReactNode; va
         fontFamily: fonts.sans,
         fontSize: 14,
         fontWeight: 600,
-        color: '#0f1115'
+        color: tokens.ink
       }}
     >
       {children}

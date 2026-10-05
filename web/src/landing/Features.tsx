@@ -113,7 +113,7 @@ function Bubble({ children, me = false }: { children: ReactNode; me?: boolean })
         py: 1,
         maxWidth: '100%',
         borderRadius: me ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
-        background: me ? `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})` : '#fff',
+        background: me ? tokens.primaryGradient : '#fff',
         color: me ? '#fff' : tokens.ink,
         fontSize: { xs: 12, md: 13 },
         fontWeight: 500,
@@ -162,7 +162,7 @@ function ContextArt() {
           <path d="M0 100 C 22 100 18 60 40 60" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
         </Box>
         <Box sx={{ ...card, flex: 1, minWidth: 0, p: { xs: 1.25, md: 1.75 } }}>
-          <Box sx={{ ...chip, color: '#fff', background: `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})`, mb: 1.25 }}>
+          <Box sx={{ ...chip, color: '#fff', background: tokens.primaryGradient, mb: 1.25 }}>
             <AutoAwesome /> Answer
           </Box>
           <Box sx={{ display: 'grid', gap: 0.75 }}>

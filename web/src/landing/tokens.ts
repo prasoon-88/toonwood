@@ -5,8 +5,11 @@ export const tokens = {
   faint: '#8a90a2',
   primary: '#1f63e6',
   primaryLight: '#3f8cff',
+  // deep enough that the white label stays above 4.5:1 across the text band (spec §2)
+  primaryGradient: 'linear-gradient(180deg, #2f74ec, #1a55d0)',
   glow: 'rgba(31,99,230,.45)',
-  sky: 'linear-gradient(180deg, #2f7deb 0%, #4b9af1 38%, #9fcaf6 62%, #f6d3b4 86%, #f4b48d 100%)',
+  divider: '#e6e8ee',
+  sky: 'linear-gradient(180deg, #2563d9 0%, #4b9af1 38%, #9fcaf6 62%, #f6d3b4 86%, #f4b48d 100%)',
   dusk: 'linear-gradient(160deg, #f7b27c, #e48a76 45%, #9b7fd4)',
   soft: 'linear-gradient(180deg, #c9d1e8, #e6e9f4)',
   // deepened at the top (spec: #6d9bff → #4f86f7) so white body text on the blue card meets AA
@@ -19,5 +22,6 @@ export const tokens = {
 
 export const fonts = {
   display: "'Instrument Serif', Georgia, serif",
-  sans: "'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif"
+  sans: "'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  mono: "'JetBrains Mono', 'Cascadia Code', Consolas, 'SFMono-Regular', Menlo, monospace"
 } as const

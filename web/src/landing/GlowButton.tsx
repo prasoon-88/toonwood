@@ -14,13 +14,13 @@ type Props = {
 const styles = {
   primary: {
     color: '#fff',
-    background: `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})`,
+    background: tokens.primaryGradient,
     boxShadow: `0 10px 30px ${tokens.glow}, inset 0 1px 0 rgba(255,255,255,.35)`,
     hoverShadow: `0 14px 38px ${tokens.glow}, inset 0 1px 0 rgba(255,255,255,.45)`
   },
   dark: {
     color: '#fff',
-    background: 'linear-gradient(180deg, #2a2d34, #0f1115)',
+    background: `linear-gradient(180deg, #2a2d34, ${tokens.ink})`,
     boxShadow: '0 10px 28px rgba(15,17,21,.35), inset 0 1px 0 rgba(255,255,255,.22), inset 0 0 0 1px rgba(255,255,255,.08)',
     hoverShadow: '0 14px 34px rgba(15,17,21,.45), inset 0 1px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.12)'
   },
@@ -53,7 +53,12 @@ export function GlowButton({ to, href, variant = 'primary', size = 'md', childre
       '@media (prefers-reduced-motion: reduce)': { transform: 'none' }
     },
     '&:active': { transform: 'translateY(0)' },
-    '&:focus-visible': { outline: `3px solid ${tokens.primaryLight}`, outlineOffset: 3 },
+    // two-tone ring (white inside, ink outside) stays visible on the sky, on white and on the dark button
+    '&:focus-visible, &.Mui-focusVisible': {
+      outline: '2px solid #fff',
+      outlineOffset: 0,
+      boxShadow: `0 0 0 5px ${tokens.ink}, ${s.boxShadow}`
+    },
     '@media (prefers-reduced-motion: reduce)': { transition: 'none' }
   } as const
   if (to) {

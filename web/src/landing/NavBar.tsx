@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import { Link as RouterLink } from 'react-router'
 import { GlowButton } from './GlowButton'
 import { Logo } from './Logo'
+import { useSignedIn } from './useSignedIn'
 
 const anchors = [
   { href: '#how', label: 'How it works' },
@@ -11,7 +11,7 @@ const anchors = [
 ]
 
 const linkSx = {
-  color: 'rgba(255,255,255,.92)',
+  color: '#fff',
   textDecoration: 'none',
   fontSize: 15,
   whiteSpace: 'nowrap',
@@ -27,15 +27,7 @@ const linkSx = {
 
 /** Top bar over the hero. Swaps Log in / Get started for Dashboard when a session exists. */
 export function NavBar() {
-  const [loggedIn, setLoggedIn] = useState(false)
-
-  useEffect(() => {
-    const controller = new AbortController()
-    fetch('/api/auth/me', { credentials: 'same-origin', signal: controller.signal })
-      .then((res) => setLoggedIn(res.status === 200))
-      .catch(() => {})
-    return () => controller.abort()
-  }, [])
+  const loggedIn = useSignedIn()
 
   return (
     <Box

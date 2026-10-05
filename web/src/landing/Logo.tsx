@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
-import { fonts } from './tokens'
+import { fonts, tokens } from './tokens'
 
-export function Logo({ color = '#0f1115' }: { color?: string }) {
+export function Logo({ color = tokens.ink }: { color?: string }) {
   return (
     <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, color }}>
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true" focusable="false">

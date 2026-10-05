@@ -10,27 +10,32 @@ import { Faq } from './Faq'
 import { FinalCta } from './FinalCta'
 import { Footer } from './Footer'
 import { FloatingCta } from './FloatingCta'
+import { SignedInContext, useSessionCheck } from './useSignedIn'
 
 export function LandingPage() {
+  // one session check for the whole page, shared by the nav and the floating button
+  const signedIn = useSessionCheck()
   return (
-    <ThemeProvider theme={landingTheme}>
-      <CssBaseline />
-      <Box data-page="landing" sx={{ overflowX: 'clip', background: '#fff' }}>
-        <main>
-          <Hero />
-          <HowItHelps />
-          <ScreenAnswers />
-          <Features />
-          <Stats />
-          <Faq />
-        </main>
-        {/* the closing call to action and the footer share one gradient */}
-        <Box sx={{ background: tokens.footer }}>
-          <FinalCta />
-          <Footer />
+    <SignedInContext value={signedIn}>
+      <ThemeProvider theme={landingTheme}>
+        <CssBaseline />
+        <Box data-page="landing" sx={{ overflowX: 'clip', background: '#fff' }}>
+          <main>
+            <Hero />
+            <HowItHelps />
+            <ScreenAnswers />
+            <Features />
+            <Stats />
+            <Faq />
+          </main>
+          {/* the closing call to action and the footer share one gradient */}
+          <Box sx={{ background: tokens.footer }}>
+            <FinalCta />
+            <Footer />
+          </Box>
+          <FloatingCta />
         </Box>
-        <FloatingCta />
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
+    </SignedInContext>
   )
 }

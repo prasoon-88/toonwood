@@ -1,5 +1,5 @@
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { GlowButton } from './GlowButton'
 import { SectionHeading } from './SectionHeading'
@@ -28,10 +28,16 @@ test('Logo shows the Toonwide name', () => {
   expect(screen.getByText('Toonwide')).toBeTruthy()
 })
 
-test('/ renders the landing page instead of redirecting', () => {
+test('/ renders the landing page instead of redirecting', async () => {
   vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 401 })))
   window.history.pushState({}, '', '/')
   render(<App />)
   expect(window.location.pathname).toBe('/')
-  expect(document.querySelector('[data-page="landing"]')).toBeTruthy()
+  // the landing route is lazy-loaded
+  await waitFor(() => expect(document.querySelector('[data-page="landing"]')).toBeTruthy(), { timeout: 10000 })
+})
+
+test('landing breakpoints match the Bootstrap grid', async () => {
+  const { landingTheme } = await import('./theme')
+  expect(landingTheme.breakpoints.values).toEqual({ xs: 0, sm: 576, md: 768, lg: 992, xl: 1200 })
 })

@@ -247,7 +247,7 @@ function ShortcutCard() {
                     px: 1.5,
                     py: 0.5,
                     borderRadius: `${tokens.radius.chip}px`,
-                    background: `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})`,
+                    background: tokens.primaryGradient,
                     boxShadow: `0 4px 14px ${tokens.glow}`,
                     fontSize: 13,
                     fontWeight: 600

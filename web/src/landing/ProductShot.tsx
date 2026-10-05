@@ -3,6 +3,7 @@ import AutoAwesome from '@mui/icons-material/AutoAwesome'
 import CropFree from '@mui/icons-material/CropFree'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import { fonts, tokens } from './tokens'
+import { Dot } from './Dot'
 
 const tiles = [
   { name: 'Alex', bg: 'linear-gradient(135deg,#2b3a55,#4b5f86)', skin: '#e9c3a6', hair: '#2a1d1a', shirt: '#1f2a40' },
@@ -19,10 +20,6 @@ function Person({ skin, hair, shirt }: { skin: string; hair: string; shirt: stri
       <path d="M67 84c-2-30 16-46 35-46 22 0 36 16 33 44-6-14-18-22-34-22-14 0-26 9-34 24z" fill={hair} />
     </svg>
   )
-}
-
-function Dot({ color }: { color: string }) {
-  return <Box component="span" sx={{ width: 11, height: 11, borderRadius: '50%', background: color, display: 'block' }} />
 }
 
 const action = {
@@ -189,7 +186,7 @@ export function ProductShot() {
                   px: { xs: 1.25, md: 1.5 },
                   py: 0.5,
                   borderRadius: `${tokens.radius.chip}px`,
-                  background: `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})`,
+                  background: tokens.primaryGradient,
                   boxShadow: `0 4px 14px ${tokens.glow}`,
                   fontSize: { xs: 11.5, md: 13 },
                   fontWeight: 600,

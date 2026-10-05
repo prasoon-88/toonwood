@@ -3,6 +3,18 @@ import AutoAwesome from '@mui/icons-material/AutoAwesome'
 import { SoftPanel } from './SoftPanel'
 import { tokens } from './tokens'
 
+const visuallyHidden = {
+  position: 'absolute',
+  width: '1px', // a bare 1 would mean 100% in sx
+  height: '1px',
+  p: 0,
+  m: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0
+} as const
+
 const stats = [
   { value: '60 min', title: 'Free to start', text: 'Every new account gets 60 free minutes, valid for 7 days.' },
   { value: '0 bots', title: 'Nothing joins your meeting', text: 'Toonwide runs on your PC. No bot, no extra guest on the list.' },
@@ -71,8 +83,12 @@ function Transcript() {
 
 export function Stats() {
   return (
-    <Box component="section" aria-label="Toonwide in numbers">
+    <Box component="section" aria-labelledby="stats-title">
       <Box className="container" sx={{ py: { xs: 10, md: 16 }, pt: { xs: 0, md: 0 } }}>
+        {/* gives the stat titles (h3) their own parent heading in the outline; the design has no visible one */}
+        <Typography id="stats-title" component="h2" sx={visuallyHidden}>
+          Toonwide in numbers
+        </Typography>
         <div className="row g-4 gx-lg-5 align-items-center">
           <div className="col-lg-5">
             <Transcript />
@@ -89,7 +105,7 @@ export function Stats() {
                     rowGap: 1.5,
                     alignItems: 'baseline',
                     py: { xs: 3.5, md: 4.5 },
-                    borderTop: i === 0 ? 'none' : '1px solid #e6e8ee'
+                    borderTop: i === 0 ? 'none' : `1px solid ${tokens.divider}`
                   }}
                 >
                   <Box

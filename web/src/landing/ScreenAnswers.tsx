@@ -1,9 +1,8 @@
 import { Box } from '@mui/material'
 import { SectionHeading } from './SectionHeading'
 import { SoftPanel } from './SoftPanel'
-import { tokens } from './tokens'
-
-const mono = "'JetBrains Mono', 'Cascadia Code', Consolas, 'SFMono-Regular', Menlo, monospace"
+import { fonts, tokens } from './tokens'
+import { Dot } from './Dot'
 
 const code = `function twoSum(nums: number[], target: number): number[] {
   const seen = new Map<number, number>()
@@ -45,10 +44,6 @@ function highlight(line: string) {
   })
 }
 
-function Dot({ color }: { color: string }) {
-  return <Box component="span" sx={{ width: 10, height: 10, borderRadius: '50%', background: color, display: 'block' }} />
-}
-
 function ProblemCard() {
   return (
     <Box sx={{ position: 'relative', height: '100%', p: { xs: 0.75, md: 1 } }}>
@@ -79,7 +74,7 @@ function ProblemCard() {
           height: '100%',
           borderRadius: '14px',
           background: '#f6f7fb',
-          border: '1px solid #e6e8ee',
+          border: `1px solid ${tokens.divider}`,
           p: { xs: 2.5, md: 3 }
         }}
       >
@@ -105,8 +100,8 @@ function ProblemCard() {
             p: 1.5,
             borderRadius: '10px',
             background: '#fff',
-            border: '1px solid #e6e8ee',
-            fontFamily: mono,
+            border: `1px solid ${tokens.divider}`,
+            fontFamily: fonts.mono,
             fontSize: 13,
             lineHeight: 1.6,
             color: tokens.ink,
@@ -133,7 +128,7 @@ function CodeBlock() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 2, height: 40, borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-          <Box component="span" sx={{ px: 1.25, py: 0.4, borderRadius: '6px', background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.75)', fontSize: 12, fontFamily: mono }}>
+          <Box component="span" sx={{ px: 1.25, py: 0.4, borderRadius: '6px', background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.75)', fontSize: 12, fontFamily: fonts.mono }}>
             solution.ts
           </Box>
         </Box>
@@ -142,7 +137,7 @@ function CodeBlock() {
           sx={{
             m: 0,
             p: { xs: 2, md: 3 },
-            fontFamily: mono,
+            fontFamily: fonts.mono,
             fontSize: { xs: 12, md: 14 },
             lineHeight: 1.75,
             overflowX: 'auto',
@@ -172,7 +167,7 @@ function CodeBlock() {
           px: 1.75,
           py: 1,
           borderRadius: '14px',
-          background: `linear-gradient(180deg, ${tokens.primaryLight}, ${tokens.primary})`,
+          background: tokens.primaryGradient,
           color: '#fff',
           fontSize: { xs: 13, md: 14 },
           fontWeight: 600,
@@ -209,9 +204,9 @@ export function ScreenAnswers() {
             }}
           >
             <Box sx={{ height: 40, display: 'flex', alignItems: 'center', gap: 1, px: 2, borderBottom: '1px solid #eef0f4' }}>
-              <Dot color="#ff5f57" />
-              <Dot color="#febc2e" />
-              <Dot color="#28c840" />
+              <Dot color="#ff5f57" size={10} />
+              <Dot color="#febc2e" size={10} />
+              <Dot color="#28c840" size={10} />
             </Box>
             <Box sx={{ p: { xs: 2, md: 3.5 }, pt: { xs: 3, md: 4.5 } }}>
               <div className="row g-4 g-md-4">
