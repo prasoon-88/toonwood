@@ -48,17 +48,17 @@ export function Hero() {
     >
       <NavBar />
 
-      {/* soft light bloom behind the headline */}
+      {/* soft deeper-blue scrim behind the text block keeps white copy AA-readable */}
       <Box
         aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: { xs: 40, md: 20 },
+          top: { xs: 60, md: 80 },
           left: '50%',
           transform: 'translateX(-50%)',
-          width: { xs: 520, md: 1100 },
-          height: { xs: 420, md: 560 },
-          background: 'radial-gradient(closest-side, rgba(255,255,255,.28), rgba(255,255,255,0))',
+          width: { xs: 900, md: 1900 },
+          height: { xs: 580, md: 680 },
+          background: 'radial-gradient(closest-side, rgba(20,70,170,.55), rgba(20,70,170,.55) 60%, rgba(20,70,170,.3) 82%, rgba(20,70,170,0))',
           pointerEvents: 'none'
         }}
       />
@@ -99,7 +99,7 @@ export function Hero() {
           <GlowButton to="/signup" size="lg">
             Get started free
           </GlowButton>
-          <Typography sx={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,.92)', textShadow: '0 1px 8px rgba(20,60,140,.3)' }}>
+          <Typography sx={{ fontSize: 14, fontWeight: 500, color: '#fff', textShadow: '0 1px 8px rgba(20,60,140,.3)' }}>
             60 free minutes · Windows
           </Typography>
         </Box>

@@ -5,7 +5,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy'
 import { fonts, tokens } from './tokens'
 
 const tiles = [
-  { name: 'Maya · Interviewer', bg: 'linear-gradient(135deg,#2b3a55,#4b5f86)', skin: '#e9c3a6', hair: '#2a1d1a', shirt: '#1f2a40' },
+  { name: 'Alex', bg: 'linear-gradient(135deg,#2b3a55,#4b5f86)', skin: '#e9c3a6', hair: '#2a1d1a', shirt: '#1f2a40' },
   { name: 'You', bg: 'linear-gradient(135deg,#4a3b5c,#7a6597)', skin: '#c99677', hair: '#3a2a22', shirt: '#2e2440' }
 ]
 

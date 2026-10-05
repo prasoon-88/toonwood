@@ -6,7 +6,7 @@ export const tokens = {
   primary: '#1f63e6',
   primaryLight: '#3f8cff',
   glow: 'rgba(31,99,230,.45)',
-  sky: 'linear-gradient(180deg, #3d8bf2 0%, #5aa7f5 38%, #9fcaf6 62%, #f6d3b4 86%, #f4b48d 100%)',
+  sky: 'linear-gradient(180deg, #2f7deb 0%, #4b9af1 38%, #9fcaf6 62%, #f6d3b4 86%, #f4b48d 100%)',
   dusk: 'linear-gradient(160deg, #f7b27c, #e48a76 45%, #9b7fd4)',
   soft: 'linear-gradient(180deg, #c9d1e8, #e6e9f4)',
   blue: 'linear-gradient(180deg, #6d9bff, #4f86f7)',
